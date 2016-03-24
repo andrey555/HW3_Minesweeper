@@ -1,0 +1,67 @@
+ 
+<html>
+<head>
+<title>miniSapeR</title>
+<style>
+td{
+        background-color: green;
+        border-color: gray;
+        border-width: 2px;
+        border-style: solid;
+        width: 30px;
+        height: 30px;
+}
+</style>
+</head>
+<body onload="javascript: cont()">
+<script>
+var bomb = new Array('s9x7k', 's5x4k', 's7x7k', 's5x3k', 's8x1k', 's5x2k', 's3x9k');
+var press_loc = new Array();
+function in_array(needle, haystack, strict){
+        var found = false, key, strict = !!strict;
+        for (key in haystack) {
+                if ((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)){
+                        found = true;
+                        break;
+                }
+        }
+        return found;
+}
+function press(s, k){
+        num_bomb = 0;
+        ex = "s"+s+"x"+k+"k";
+        if(!in_array(ex, press_loc)){
+                if(in_array(ex, bomb)) for(i in bomb) eval(bomb[i]).style.backgroundColor = 'red';
+                else{
+                        eval(ex).style.backgroundColor = 'grey';
+                        press_loc.push(ex);
+                        for(sl=s-1;sl<s+2;sl++){
+                                if(sl > 0 && sl < 11){
+                                        for(kl=k-1;kl<k+2;kl++){
+                                                if(kl > 0 && kl < 11 && !in_array("s"+sl+"x"+kl+"k", press_loc) && (sl != s || kl != k)){
+                                                        if(in_array("s"+sl+"x"+kl+"k", bomb)) num_bomb++;
+                                                }
+                                        }
+                                }
+                        }
+                }
+        }
+        if(num_bomb) eval(ex).innerHTML = num_bomb;
+}
+function cont(){
+        var arrr = [];
+        for(r=1;r<11;r++){
+                var arrd = [];
+                for(d=1;d<11;d++){
+                        arrd.push("<td onclick=\"javascript: press("+r+", "+d+");\" id=\"s"+r+"x"+d+"k\"></td>");
+                }
+                arrr.push("<tr>"+arrd.join('')+"</tr>");
+        }
+        con.innerHTML = arrr.join('');
+}
+</script>
+<table id="con">
+</table>
+</body>
+</html>
+ 
